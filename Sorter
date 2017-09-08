@@ -1,0 +1,179 @@
+package sorterdemo;
+
+import java.util.ArrayList;
+
+/**
+ * An implementation of radix sort for non-negative integer data; it performs k 
+ * passes over the data set, where k is the number of digits in 
+ * the largest number. The data is moved back and forth
+ * between 10 bins until the data is sorted. This implementation
+ * is not in-place.
+ * @author Sam Maloney
+ * @since 10/28/2016
+ * @see ArrayUtil
+ */
+public class Sorter 
+{
+    
+    /**
+     * The sort method of this class sorts an array, using the selection sort algorithm
+     * @param data the array to sort
+     */
+    public static void selectionSort(int[] data)
+    {
+        for (int i = 0; i < data.length - 1; i++)
+        {
+            int minPos = minimumPosition(data, i);
+            ArrayUtil.swap(data, minPos, i);
+        }
+    }
+    /**
+     * Find the smallest element in a tail range of the array
+     * @param a the array to sort
+     * @param from the first position in a to compare
+     * @return the position of the smallest element in the range a[from]...a[a.length -1]
+     */
+    private static int minimumPosition(int[] a, int from)
+    {
+        int minPos = from;
+        for (int i = from + 1; i < a.length; i++)
+        {
+            if (a[i] < a[minPos]) { minPos = i; }
+        }
+        return minPos;
+    }
+    
+    /**
+     * Sort an array, using insertion sort
+     * @param a the array to sort
+     */
+    public static void insertionSort (int [] a)
+    {
+        for (int i=1; i < a.length; i++)
+        {
+        int next = a[i];
+        // Move all larger element up
+        int j = i;
+        while (j > 0 && a[j-1] > next)
+        {
+            a[j] = a[j-1];
+            j--;
+        }
+        // Insert the element 
+        a[j] = next;
+        }
+    }
+    
+    /**
+     * calls the encapsulated quickSort method and makes it available for other classes 
+     * @param data the array to sort
+     */
+    public static void quickSort(int[] data)
+    {
+        quickSort(data, 0, data.length-1);
+    }
+   /**
+      Sorts a portion of an array, using quick sort.
+      @param data the array to sort
+      @param from the first index of the portion to be sorted
+      @param to the last index of the portion to be sorted
+   */
+   private static void quickSort(int[] data, int from, int to)
+   {
+      if (from >= to) { return; }
+      int p = partition(data, from, to);
+      quickSort(data, from, p);
+      quickSort(data, p + 1, to);
+   }
+
+    /**
+      Partitions a portion of an array.
+      @param data the array to partition
+      @param from the first index of the portion to be partitioned
+      @param to the last index of the portion to be partitioned
+      @return the last index of the first partition
+   */
+   private static int partition(int[] data, int from, int to)
+   {
+      int pivot = data[from];
+      int i = from - 1;
+      int j = to + 1;
+      while (i < j)
+      {
+         i++; while (data[i] < pivot) { i++; }
+         j--; while (data[j] > pivot) { j--; }
+         if (i < j) { ArrayUtil.swap(data, i, j); }
+      }
+      return j;
+   }
+
+    
+    /**
+     * Sort an array, using merge sort.
+     * @param a the array to sort
+     */
+    public static void mergeSort(int[] a){
+       if (a.length <= 1) {return;}
+       int[] first = new int[a.length / 2];
+       int[] second = new int[a.length /2];
+       // Copy the first half of a into first, the second half into second
+       for (int i = 0; i < first.length; i++)
+       {
+           first[i] = a[i];
+       }
+       for (int i = 0; i < second.length; i++)
+       {
+           second[i] = a[first.length +i]; 
+       }    
+       mergeSort(first);
+       mergeSort(second);
+       merge(first, second, a);
+    }
+    
+    /**
+     * Merges two sorted arrays into an array
+     * @param first the first sorted array
+     * @param second the second sorted array
+     * @param a the array into which t merge first and second
+     */
+    private static void merge(int[] first, int[] second, int[] a)
+    {
+        int iFirst = 0; // Next element to sonsider in the first array
+        int iSecond = 0; // Net element to consider in the second array
+        int j = 0; // Next open position in a
+        
+        // As long as neither iFirst nor iSecond past the end, move
+        // the smaller element into a
+        while (iFirst < first.length && iSecond < second.length)
+        {
+            if (first[iFirst] < second[iSecond])
+            {
+                a[j] = first[iFirst];
+                iFirst++;
+            }
+            else
+            {
+                a[j] = second[iSecond];
+                iSecond++;
+            } 
+            j++;
+        }
+    
+       // Copy any remaining entries of the first array
+       while (iFirst < first.length)
+       {
+           a[j] = first[iFirst];
+           iFirst++; j++;
+       }
+       
+       // Copy any remaining entries of the second half
+       while (iSecond < second.length)
+       {
+           a[j] = second[iSecond];
+           iSecond++; j++;
+       }
+        
+    }
+}
+    
+    
