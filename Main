@@ -1,0 +1,76 @@
+package sorterdemo;
+
+import java.util.Arrays;
+
+/**
+ * This is a programming project that test find find the differences is Selection sort,
+ * Insertion Sort, Merged Sort, and 
+ * @author Samuel Maloney
+ * @since 10/28/2016
+ * @See Sorter, Stopwatch, ArrayUtil
+ */
+public class SorterDemo {
+
+    public enum Order{Random, Ascending, Descending};
+    public enum Sort{Selection, Insertion, Quick, Merged};
+    public static void main(String[] args) 
+    {
+    StopWatch watch = new StopWatch(); 
+        int[] data;
+        int[] copyArray;
+        for (Order ord : Order.values())
+        { 
+            System.out.printf("Arrays With Intergers In %s Order%n",ord);
+            System.out.printf("%-12s%-15s%-15s%-15s%-15s%n","N","Selection","Insertion","Quick","Merge");
+            for (int i = 10000; i <= 60000; i+= 10000)
+            { 
+                System.out.printf("%-12d", i);     
+                switch( ord)
+                        {
+                            case Random: 
+                                data = ArrayUtil.randomIntArray(i, i);
+                                break;
+                            case Ascending:
+                                data = ArrayUtil.ascIntArray(i);
+                                break;
+                            default:
+                                data = ArrayUtil.descIntArray(i);
+                        }          
+
+                    for (Sort sortType : Sort.values())
+                    {
+                        copyArray = Arrays.copyOf(data, i);
+                        switch (sortType)
+                        {
+                            case Insertion:
+                                watch.reset();
+                                watch.start();
+                                Sorter.insertionSort(copyArray);
+                                watch.stop();
+                                break;
+                            case Selection:
+                                watch.reset();
+                                watch.start();
+                                Sorter.selectionSort(copyArray);
+                                watch.stop();
+                                break;
+                            case Quick:
+                                watch.reset();
+                                watch.start();
+                                Sorter.quickSort(copyArray);
+                                watch.stop();
+                                break;
+                            default:
+                                watch.reset();
+                                watch.start();
+                                Sorter.mergeSort(copyArray);
+                                watch.stop();
+                                break;
+                        }           
+                    System.out.printf("%-15d",watch.getElapsedTime());
+                    }     
+                    System.out.println("");
+            }
+        }
+    }
+}
